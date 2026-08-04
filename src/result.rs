@@ -14,7 +14,7 @@ impl From<std::io::Error> for CassetteError {
 }
 
 impl From<std::string::FromUtf8Error> for CassetteError {
-    fn from(e: std::string::FromUtf8Error) -> Self {
+    fn from(_: std::string::FromUtf8Error) -> Self {
         CassetteError::ParseOutputError
     }
 }
