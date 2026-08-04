@@ -95,7 +95,7 @@ pub async fn extract_video_fragment(
     }
 
     if let Some((w, h)) = params.output_resolution {
-        let resize = format!("\"scale=w={w}:h={h}:force_original_aspect_ratio=decrease\"");
+        let resize = format!("scale=w={w}:h={h}:force_original_aspect_ratio=decrease");
         command.args(["-vf", &resize]);
     }
 
