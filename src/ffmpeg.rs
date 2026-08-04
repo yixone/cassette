@@ -99,6 +99,7 @@ pub async fn extract_video_fragment(
         command.args(["-vf", &resize]);
     }
 
+    command.args(["-f", "mp4"]);
     command.arg(output);
 
     execute_quiet(command).await?;
