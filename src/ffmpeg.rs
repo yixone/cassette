@@ -73,14 +73,14 @@ pub async fn extract_video_fragment(
         return Err(CassetteError::FileAlreadyExists);
     }
 
+    command.arg("-i");
+    command.arg(&input.path);
+
     command.arg("-ss");
     command.arg(params.fragment.start.as_secs().to_string());
 
     command.arg("-t");
     command.arg(params.fragment.duration.as_secs().to_string());
-
-    command.arg("-i");
-    command.arg(&input.path);
 
     if let Some(framerate) = params.frame_rate {
         command.arg("-r");
