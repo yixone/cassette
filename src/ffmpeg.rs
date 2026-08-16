@@ -49,15 +49,19 @@ pub struct FragmentParams {
     pub duration: Duration,
 }
 
+pub enum ResizeParams {
+    Auto,
+    ForceWidth { w: u32 },
+}
+
 pub struct ExtractVideoFragmentParams {
     pub fragment: FragmentParams,
     /// Specifies the number of frames per second for the fragment
     pub frame_rate: Option<u8>,
     /// If True, disables the audio track in the frag
     pub audio: AudioMode,
-    /// The resolution to which fragment will be scaled.
-    /// If None, the original resolution will be used
-    pub output_resolution: Option<(u32, u32)>,
+    /// The resolution to which fragment will be scaled
+    pub output_resolution: ResizeParams,
 }
 
 /// Retrieves a video segment with the specified parameters
@@ -94,10 +98,19 @@ pub async fn extract_video_fragment(
         AudioMode::Auto => {}
     }
 
-    if let Some((w, h)) = params.output_resolution {
-        let resize = format!("scale=w={w}:h={h}:force_original_aspect_ratio=decrease");
-        command.args(["-vf", &resize]);
+    match params.output_resolution {
+        ResizeParams::Auto => {}
+        ResizeParams::ForceWidth { w } => {
+            command.args(["-vf", &format!("scale={w}:-2")]);
+        }
     }
+
+    // if let Some((w, h)) = params.output_resolution {
+    //     let resize = format!("scale={w}:-2");
+    //     command.args(["-vf", &resize]);
+    // }
+
+    command.args(["-c:v", "libx264"]);
 
     command.args(["-f", "mp4"]);
     command.arg(output);
